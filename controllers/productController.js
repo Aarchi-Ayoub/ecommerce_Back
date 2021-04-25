@@ -218,3 +218,11 @@ exports.searchProduct = (req,res)=>{
                 })
     });
 }
+// Get photo from DB
+exports.photoProduct = (req,res)=>{
+    const { data , contentType } = req.product.photo;
+    if(data){
+        res.set('Content-Type',contentType);
+        return res.send(data);
+    }
+}

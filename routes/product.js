@@ -11,7 +11,8 @@ const {
         updateProduct ,
         listProduct ,
         relatedProduct,
-        searchProduct
+        searchProduct,
+        photoProduct
     } = require('../controllers/productController');
 
 const { requireSingIn , isAuth , isAdmin} = require("../middlewares/auth");
@@ -29,6 +30,9 @@ router.get('/related/:productId',relatedProduct);
 
 // Route of search multi criter
 router.post('/search',searchProduct);
+
+// Route of photo
+router.get('/photo/:productId',photoProduct);
 
 // Route of perciste
 router.post('/create/:userId',[requireSingIn, isAuth, isAdmin],createProduct);
