@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const expressValidator = require('express-validator');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
-
+var cors = require('cors')
 //Config App
 require('dotenv').config();
 const app = express();
@@ -33,6 +33,8 @@ app.use(express.json());
 app.use(expressValidator());
 // Use the cookie parser
 app.use(cookieParser());
+// 
+app.use(cors());
 // Use the routes middlewars
 app.use('/api',authRouter);
 app.use('/api',userRouter);
