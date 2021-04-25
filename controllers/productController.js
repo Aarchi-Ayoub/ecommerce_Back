@@ -141,3 +141,42 @@ exports.updateProduct = (req,res)=>{
     });
     
 }
+// Methode of list products
+exports.listProduct = (req,res)=>{
+    let SortBy = req.query.sortby ? req.query.sortby : '_id';
+    let OrderBy = req.query.orderby ? req.query.orderby : 'asc';
+    let Limit = req.query.limit ? parseInt(req.query.limit) : 6; 
+    Product.find()
+            .select('-photo') // all except phote
+            .populate('category') // information about the category
+            .sort([[SortBy,OrderBy]])
+            .limit(Limit)
+            .exec((error,data)=>{
+                if(error){
+                    res.status(404).send({
+                        message : 'Product not found....'
+                    })
+                }
+                res.status(200).json({
+                    products : data
+                })
+            });
+}
+// Realated product 
+exports.relatedProduct = (req,res)=>{
+    let Limit = req.query.limit ? parseInt(req.query.limit) : 6; 
+    Product.find({category: req.product.category, _id:{ $ne: req.product._id }})
+            .limit(Limit)
+            .select('-photo')
+            .populate('category','_id name')
+            .exec((error,data)=>{
+                if(error){
+                    res.status(404).send({
+                        message : 'Product not found....'
+                    })
+                }
+                res.status(200).json({
+                    products : data
+                })
+            });
+}

@@ -4,17 +4,30 @@ const express = require('express');
 const router = express.Router();
 
 // Import modules
-const { createProduct , showProduct , deleteProduct , updateProduct} = require('../controllers/productController');
+const { 
+        createProduct , 
+        showProduct , 
+        deleteProduct , 
+        updateProduct ,
+        listProduct ,
+        relatedProduct
+    } = require('../controllers/productController');
 
 const { requireSingIn , isAuth , isAdmin} = require("../middlewares/auth");
 const { userById } = require("../middlewares/user");
 const { productByID } = require("../middlewares/product");
 
-// Route of perciste
-router.post('/create/:userId',[requireSingIn, isAuth, isAdmin],createProduct);
+// Route of products
+router.get('/',listProduct);
 
 // Route of show product
 router.get('/:productId',showProduct);
+
+// Route of related products
+router.get('/related/:productId',relatedProduct);
+
+// Route of perciste
+router.post('/create/:userId',[requireSingIn, isAuth, isAdmin],createProduct);
 
 // Route of delete product
 router.delete('/:productId/:userId',[requireSingIn, isAuth, isAdmin],deleteProduct);
