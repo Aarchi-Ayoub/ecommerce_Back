@@ -145,7 +145,7 @@ exports.updateProduct = (req,res)=>{
 exports.listProduct = (req,res)=>{
     let SortBy = req.query.sortby ? req.query.sortby : '_id';
     let OrderBy = req.query.orderby ? req.query.orderby : 'asc';
-    let Limit = req.query.limit ? parseInt(req.query.limit) : 6; 
+    let Limit = req.query.limit ? parseInt(req.query.limit) : 100; 
     Product.find()
             .select('-photo') // all except phote
             .populate('category') // information about the category
@@ -160,7 +160,7 @@ exports.listProduct = (req,res)=>{
                 res.status(200).json({
                     products : data
                 })
-            });
+    });
 }
 // Realated product 
 exports.relatedProduct = (req,res)=>{
@@ -179,4 +179,42 @@ exports.relatedProduct = (req,res)=>{
                     products : data
                 })
             });
+}
+// Search multi critere
+exports.searchProduct = (req,res)=>{
+    let SortBy = req.query.sortby ? req.query.sortby : '_id';
+    let OrderBy = req.query.orderby ? req.query.orderby : 'asc';
+    let Limit = req.query.limit ? parseInt(req.query.limit) : 100; 
+    let Skip = parseInt(req.query.skip);
+    let finArgs = {};
+    
+    for(let key in req.body.filters){
+        if(req.body.filters[key].length > 0){
+            if(key === "price"){
+                finArgs[key] = {
+                    $gt : req.body.filters[key][0],
+                    $lt : req.body.filters[key][1]
+                }
+            }else{
+                finArgs[key] = req.body.filters[key];
+            }
+        }
+    }
+
+    Product.find(finArgs)
+            .select('-photo') // all except phote
+            .populate('category') // information about the category
+            .sort([[SortBy,OrderBy]])
+            .limit(Limit)
+            .skip(Skip)
+            .exec((error,data)=>{
+                if(error){
+                    res.status(404).send({
+                        message : 'Product not found....'
+                    })
+                }
+                res.status(200).json({
+                    products : data
+                })
+    });
 }
