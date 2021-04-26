@@ -12,8 +12,6 @@ const { userSignUpValidator }  = require('../middlewares/userValidator');
 
 // Import the auth checker
 const {requireSingIn} = require('../middlewares/auth');
-// Route for the main page
-route.get('/',mainPage);
 
 // Route for the singup
 route.post('/singup',userSignUpValidator,singUp);

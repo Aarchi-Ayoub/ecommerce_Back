@@ -4,12 +4,6 @@ const user = require('../models/user');
 // Import the Model
 const User = require('../models/user');
 
-// Export the main page function
-exports.mainPage    = (req,res,next)=>{
-    res.send('Hello in my ecomerce web site...');
-    next();
-};
-
 // Export the singup function
 exports.singUp    = (req,res)=>{
     const user = User(req.body);
@@ -19,6 +13,8 @@ exports.singUp    = (req,res)=>{
         if(err){
             res.status(400).send(err);
         }
+        user.profile.hashed_password = undefined;
+        user.profile.salt            = undefined;
         res.send(user);
     });
 };
