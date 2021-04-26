@@ -5,7 +5,7 @@ const express   = require('express');
 const route     = express.Router();
 
 // Import the controllers
-const { mainPage , singUp, singIn, singOut }  = require('../controllers/authController');
+const { singUp, singIn, singOut }  = require('../controllers/authController');
 
 // Import the user validators
 const { userSignUpValidator }  = require('../middlewares/userValidator');

@@ -13,8 +13,8 @@ exports.singUp    = (req,res)=>{
         if(err){
             res.status(400).send(err);
         }
-        user.profile.hashed_password = undefined;
-        user.profile.salt            = undefined;
+        user.hashed_password = undefined
+        user.salt            = undefined
         res.send(user);
     });
 };
@@ -25,7 +25,7 @@ exports.singIn    = (req,res)=>{
     // Check for email
     User.findOne({email},(error,user)=>{
         if( error || !user){
-            res.status(400).json({
+            return res.status(400).json({
                 error : "Invalid email..."
             });
         }
