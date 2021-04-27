@@ -144,14 +144,14 @@ exports.updateProduct = (req,res)=>{
 }
 // Methode of list products
 exports.listProduct = (req,res)=>{
-    let SortBy = req.query.sortby ? req.query.sortby : '_id';
-    let OrderBy = req.query.orderby ? req.query.orderby : 'asc';
-    let Limit = req.query.limit ? parseInt(req.query.limit) : 100; 
+    let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
+    let orderBy = req.query.orderBy ? req.query.orderBy : 'asc';
+    let limit = req.query.limit ? parseInt(req.query.limit) : 100; 
     Product.find()
             .select('-photo') // all except phote
             .populate('category') // information about the category
-            .sort([[SortBy,OrderBy]])
-            .limit(Limit)
+            .sort([[sortBy,orderBy]])
+            .limit(limit)
             .exec((error,data)=>{
                 if(error){
                     res.status(404).send({

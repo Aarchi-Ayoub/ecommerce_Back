@@ -32,6 +32,9 @@ const productSchema = new mongoose.Schema({
     },
     shipping: {
         type: String
+    },
+    solde: {
+        type: Number
     }
     },{
         timestamps : true
