@@ -13,10 +13,10 @@ exports.createProduct = (req,res)=>{
     // Keep the extension
     form.keepExtensions = true;
 
-    form.parse(req,(err,fields,files)=>{
+    form.parse(req, (err, fields, files)=>{
         // Case of not upload
         if(err){
-            res.status(400).json({
+            return res.status(400).json({
                 message : "Image could'nt be upload..."
             });
         }
@@ -26,7 +26,7 @@ exports.createProduct = (req,res)=>{
         if(files.photo){
             // Check the size of image 
             if(files.photo.size > Math.pow(20,6)){
-                res.status(400).json({
+                return res.status(400).json({
                     message : "Image size must be less than 2MB... "
                 });
             }
@@ -39,7 +39,8 @@ exports.createProduct = (req,res)=>{
             description: Joi.string().required(),
             price: Joi.required(),
             quantity: Joi.required(),
-            category: Joi.required()
+            category: Joi.required(),
+            shipping: Joi.boolean()
         });
         // Valide the information of the product
         const { error } = schema.validate(fields);

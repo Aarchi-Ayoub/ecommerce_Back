@@ -31,9 +31,7 @@ const productSchema = new mongoose.Schema({
         require: true
     },
     shipping: {
-        type: Boolean,
-        require: false,
-        default: false
+        type: String
     }
     },{
         timestamps : true
