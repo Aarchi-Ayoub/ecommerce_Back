@@ -13,7 +13,7 @@ exports.createProduct = (req,res)=>{
     // Keep the extension
     form.keepExtensions = true;
 
-    form.parse(req, (err, fields, files)=>{
+    form.parse(req, (err,fields,files)=>{
         // Case of not upload
         if(err){
             return res.status(400).json({
@@ -39,8 +39,7 @@ exports.createProduct = (req,res)=>{
             description: Joi.string().required(),
             price: Joi.required(),
             quantity: Joi.required(),
-            category: Joi.required(),
-            shipping: Joi.boolean()
+            category: Joi.required()
         });
         // Valide the information of the product
         const { error } = schema.validate(fields);
@@ -49,18 +48,7 @@ exports.createProduct = (req,res)=>{
             return res.status(400).json({
                 message : error.details[0].message
             });
-        }
-        product.save((err,product)=>{
-            // Error
-            if(err) {
-                return res.status(400).json({
-                    err: 'Product not persist '
-                })
-            }
-            res.json({
-                product
-            })
-        });
+        }l
     });
 }
 // Methode of show 1 product
@@ -165,9 +153,9 @@ exports.listProduct = (req,res)=>{
 }
 // Realated product 
 exports.relatedProduct = (req,res)=>{
-    let Limit = req.query.limit ? parseInt(req.query.limit) : 6; 
+    let limit = req.query.limit ? parseInt(req.query.limit) : 6; 
     Product.find({category: req.product.category, _id:{ $ne: req.product._id }})
-            .limit(Limit)
+            .limit(limit)
             .select('-photo')
             .populate('category','_id name')
             .exec((error,data)=>{
@@ -183,10 +171,10 @@ exports.relatedProduct = (req,res)=>{
 }
 // Search multi critere
 exports.searchProduct = (req,res)=>{
-    let SortBy = req.query.sortby ? req.query.sortby : '_id';
-    let OrderBy = req.query.orderby ? req.query.orderby : 'asc';
-    let Limit = req.query.limit ? parseInt(req.query.limit) : 100; 
-    let Skip = parseInt(req.query.skip);
+    let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
+    let orderBy = req.query.orderBy ? req.query.orderBy : 'asc';
+    let limit = req.query.limit ? parseInt(req.query.limit) : 100; 
+    let skip = parseInt(req.query.skip);
     let finArgs = {};
     
     for(let key in req.body.filters){
@@ -205,9 +193,9 @@ exports.searchProduct = (req,res)=>{
     Product.find(finArgs)
             .select('-photo') // all except phote
             .populate('category') // information about the category
-            .sort([[SortBy,OrderBy]])
-            .limit(Limit)
-            .skip(Skip)
+            .sort([[sortBy,orderBy]])
+            .limit(limit)
+            .skip(skip)
             .exec((error,data)=>{
                 if(error){
                     res.status(404).send({
