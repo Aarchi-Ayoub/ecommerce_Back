@@ -66,7 +66,7 @@ exports.deleteProduct = (req,res)=>{
     // Delete the product
     product.remove((error,product)=>{
         if(error){
-            res.status(404).json({message: "Product not found..."});
+            return res.status(404).json({message: "Product not found..."});
         }
         res.status(204).json({});
     });
@@ -81,7 +81,7 @@ exports.updateProduct = (req,res)=>{
     form.parse(req,(err,fields,files)=>{
         // Case of not upload
         if(err){
-            res.status(400).json({
+            return res.status(400).json({
                 message : "Image could'nt be upload..."
             });
         }
@@ -93,7 +93,7 @@ exports.updateProduct = (req,res)=>{
         if(files.photo){
             // Check the size of image 
             if(files.photo.size > Math.pow(20,6)){
-                res.status(400).json({
+                return res.status(400).json({
                     message : "Image size must be less than 2MB... "
                 });
             }
@@ -135,14 +135,22 @@ exports.listProduct = (req,res)=>{
     let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
     let orderBy = req.query.orderBy ? req.query.orderBy : 'asc';
     let limit = req.query.limit ? parseInt(req.query.limit) : 100; 
-    Product.find()
+    let query = {};
+    let { category  , name } = req.query
+    if(name){
+        query.name = { $regex : name, $options : 'i'}
+    }
+    if(category){
+        query.category =category
+    }
+    Product.find(query)
             .select('-photo') // all except phote
             .populate('category') // information about the category
             .sort([[sortBy,orderBy]])
             .limit(limit)
             .exec((error,data)=>{
                 if(error){
-                    res.status(404).send({
+                    return res.status(404).send({
                         message : 'Product not found....'
                     })
                 }
@@ -160,7 +168,7 @@ exports.relatedProduct = (req,res)=>{
             .populate('category','_id name')
             .exec((error,data)=>{
                 if(error){
-                    res.status(404).send({
+                    return res.status(404).send({
                         message : 'Product not found....'
                     })
                 }
@@ -173,8 +181,9 @@ exports.relatedProduct = (req,res)=>{
 exports.searchProduct = (req,res)=>{
     let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
     let orderBy = req.query.orderBy ? req.query.orderBy : 'asc';
-    let limit = req.query.limit ? parseInt(req.query.limit) : 100; 
-    let skip = parseInt(req.query.skip);
+    // let limit = req.body.limit ? parseInt(req.body.limit) : 3; 
+    let limit = req.body.limit ? parseInt(req.body.limit) : 0;
+    let skip = parseInt(req.body.skip);
     let finArgs = {};
     
     for(let key in req.body.filters){
@@ -198,7 +207,7 @@ exports.searchProduct = (req,res)=>{
             .skip(skip)
             .exec((error,data)=>{
                 if(error){
-                    res.status(404).send({
+                    return res.status(404).send({
                         message : 'Product not found....'
                     })
                 }
@@ -209,9 +218,9 @@ exports.searchProduct = (req,res)=>{
 }
 // Get photo from DB
 exports.photoProduct = (req,res)=>{
-    const { data , contentType } = req.product.photo;
-    if(data){
-        res.set('Content-Type',contentType);
-        return res.send(data);
+    // const { data , contentType } = req.product.photo;
+    if(req.product.photo.data){
+        res.set('Content-Type',req.product.photo.contentType);
+        return res.send(req.product.photo.data);
     }
 }

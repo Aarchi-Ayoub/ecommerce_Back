@@ -30,7 +30,7 @@ exports.isAuth = (req,res,next)=>{
 exports.isAdmin = (req,res,next)=>{ 
     // Case not admin
     if(req.auth.role == 0 ){
-        res.status(403).json({
+        return res.status(403).json({
             error : 'You are not admin ! Access denied...'
         });
     }
