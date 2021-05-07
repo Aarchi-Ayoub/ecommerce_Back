@@ -48,7 +48,19 @@ exports.createProduct = (req,res)=>{
             return res.status(400).json({
                 message : error.details[0].message
             });
-        }l
+        }
+        // Save data
+        product.save((err, product) => {
+            if(err) {
+                return res.status(400).json({
+                    err: 'Product not persist '
+                })
+            }
+
+            res.json({
+                product
+            })
+        })
     });
 }
 // Methode of show 1 product

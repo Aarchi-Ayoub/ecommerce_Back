@@ -1,4 +1,5 @@
 // Import & Use packages
+const { boolean } = require('joi');
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Schema;
 // Create the Schema
@@ -31,10 +32,12 @@ const productSchema = new mongoose.Schema({
         require: true
     },
     shipping: {
-        type: String
+        type: Boolean,
+        default:false
     },
     solde: {
-        type: Number
+        type: Number,
+        default:0
     }
     },{
         timestamps : true

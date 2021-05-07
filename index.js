@@ -15,6 +15,7 @@ const userRouter = require('./routes/user');
 const categoryRouter = require('./routes/category');
 const productRouter = require('./routes/product');
 const braintreeRouter = require('./routes/braintree');
+const orderRouter = require('./routes/order');
 // Get access to environment variables
 require('dotenv').config();
 
@@ -42,6 +43,7 @@ app.use('/api',userRouter);
 app.use('/api/categories',categoryRouter);
 app.use('/api/products',productRouter);
 app.use('/api/braintree',braintreeRouter);
+app.use('/api/order',orderRouter);
 // Config the database
 mongoose.connect(db, {
             useNewUrlParser: true,
